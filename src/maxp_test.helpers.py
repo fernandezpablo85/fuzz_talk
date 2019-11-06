@@ -3,9 +3,10 @@
 
 
 # @given(lists(integers(), min_size=2))
-# def test_max_product_largest_than_first_two(ns):
-#     first, second = ns[:2]
-#     assert max_product(ns) >= first * second
+# def test_max_product_largest_than_any_two(ns):
+#     p = max_product(ns)
+#     one, two = np.random.choice(ns, 2)
+#     assert p >= (one * two)
 
 
 # @given(lists(integers(), min_size=2))
