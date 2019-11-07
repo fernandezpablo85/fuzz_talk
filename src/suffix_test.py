@@ -1,7 +1,7 @@
-from suffix import remove_suffix
+from suffix import remove_suffix as remove
 
 
 def test_remove_suffix():
-    assert "pablo.fernandez" == remove_suffix("@gmail.com", "pablo.fernandez@gmail.com")
-    assert "google" == remove_suffix(".com.ar", "google.com.ar")
-    assert "google.com.ar" == remove_suffix(".not.a.suffix", "google.com.ar")
+    assert "pablo" == remove(suffix="@gmail.com", string="pablo@gmail.com")
+    assert "google" == remove(suffix=".com.ar", string="google.com.ar")
+    assert "google.com.ar" == remove(suffix=".not. .suffix", string="google.com.ar")
