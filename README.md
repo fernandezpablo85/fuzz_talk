@@ -1,5 +1,7 @@
-# Fuzz and Property Based Testing - PyCon 2019 Talk
-### An introduction to property based testing in python, using the [hypothesis](https://hypothesis.works/) library
+![logo](./resources/talk_title.png)
+
+
+# An introduction to property based testing in python, using the [hypothesis](https://hypothesis.works/) library
 
 ## Slides
 Available on PDF [here](./slides.pdf).
