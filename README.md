@@ -14,5 +14,5 @@ Check the [`resources`](./resources) folder.
 
 ## About me
 
-Hit me up on twitter or telegram at `[@fernandezpablo](https://twitter.com/fernandezpablo)`
+Hit me up on twitter or telegram at [`@fernandezpablo`](https://twitter.com/fernandezpablo)
 
