@@ -1,6 +1,8 @@
 # from hypothesis import given, settings
 # from hypothesis.strategies import integers
 
+# @settings(max_examples=1000)
+
 
 # @given(integers())
 # def test_add_props_zero(a):
