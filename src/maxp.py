@@ -1,7 +1,7 @@
 def max_product(ns):
     """Given a list of numbers, return the maximum product possible between two.
 
-    Example: [10,2,3,4] => 4 * 10 => 40
+    Example: [10, 2, 3, 4] => 4 * 10 => 40
     """
     if len(ns) < 2:
         return None
