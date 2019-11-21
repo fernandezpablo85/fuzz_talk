@@ -1,4 +1,4 @@
-from example import add
+from add import add
 
 
 def test_add():
