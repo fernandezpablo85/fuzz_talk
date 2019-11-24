@@ -6,4 +6,3 @@
 # def test_suffix(suffix, string):
 #     full = string + suffix
 #     assert remove(suffix, full) == string
-
