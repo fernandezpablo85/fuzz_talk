@@ -3,7 +3,27 @@ from hypothesis import note
 from hypothesis.strategies import sampled_from
 
 
-stuff_to_move = ["wolf", "sheep", "grass"]
+stuff_to_move = sampled_from(["wolf", "sheep", "grass"])
+
+
+def all_in(set, *elements):
+    return all(e in set for e in elements)
+
+
+def all_alone_in(set, *elements):
+    return all_in(set, *elements) and "you" not in set
+
+
+def invalid_side(s):
+    sheep_dies = all_alone_in(s, "wolf", "sheep")
+    eats_grass = all_alone_in(s, "grass", "sheep")
+    return sheep_dies or eats_grass
+
+def stage_move(origin, destination, to_move):
+    new_origin = origin - to_move
+    new_destination = destination.union(to_move)
+    invalid = invalid_side(new_origin) or invalid_side(new_destination)
+    return new_origin, new_destination, invalid
 
 
 class WolfAndSheep(RuleBasedStateMachine):
@@ -12,55 +32,31 @@ class WolfAndSheep(RuleBasedStateMachine):
         self.left_side = set(["wolf", "sheep", "grass", "you"])
         self.right_side = set()
 
-    def on_side(self, side, *args):
-        return all(a in side for a in args)
+    @precondition(lambda self: "you" in self.left_side)
+    @rule(item=stuff_to_move)
+    def move_right(self, item):
+        to_move = [item] if item in self.left_side else []
+        to_move = set(to_move + ["you"])
+        new_left, new_right, invalid_move = stage_move(self.left_side, self.right_side, to_move)
+        if invalid_move:
+            note("move would result in invalid side")
+        else:
+            note(f"{new_left} => {to_move} => {self.right_side}")
+            self.right_side = new_right
+            self.left_side = new_left
 
-    def you_are_left(self):
-        return "you" in self.left_side
-
-    def you_are_right(self):
-        return "you" in self.right_side
-
-    def invalid_side(self, s):
-        sheep_dies = self.on_side(s, "wolf", "sheep") and not self.on_side(s, "you")
-        eats_grass = self.on_side(s, "grass", "sheep") and not self.on_side(s, "you")
-        return sheep_dies or eats_grass
-
-    @precondition(lambda self: self.you_are_left())
-    @rule(a=sampled_from(stuff_to_move))
-    def move_right(self, a):
-        to_move = set([a] + ["you"]) if a in self.left_side else set(["you"])
-        new_left = self.left_side - to_move
-        new_right = self.right_side.union(to_move)
-        if self.invalid_side(new_left):
-            note(f"move would result in invalid left side {self.left_side}")
-            return
-
-        if self.invalid_side(new_right):
-            note(f"move would result in invalid right side {self.right_side}")
-            return
-
-        note(f"{self.left_side} => {to_move} => {self.right_side}")
-        self.right_side = new_right
-        self.left_side = new_left
-
-    @precondition(lambda self: self.you_are_right())
-    @rule(a=sampled_from(stuff_to_move))
-    def move_left(self, a):
-        to_move = set([a] + ["you"]) if a in self.right_side else set(["you"])
-        new_right = self.right_side - to_move
-        new_left = self.left_side.union(to_move)
-        if self.invalid_side(new_left):
-            note(f"move would result in invalid left side {self.left_side}")
-            return
-
-        if self.invalid_side(new_right):
-            note(f"move would result in invalid right side {self.right_side}")
-            return
-
-        note(f"{self.left_side} <= {to_move} <= {self.right_side}")
-        self.right_side = new_right
-        self.left_side = new_left
+    @precondition(lambda self: "you" in self.right_side)
+    @rule(item=stuff_to_move)
+    def move_left(self, item):
+        to_move = [item] if item in self.right_side else []
+        to_move = set(to_move + ["you"])
+        new_right, new_left, invalid_move = stage_move(self.right_side, self.left_side, to_move)
+        if invalid_move:
+            note("move would result in invalid side")
+        else:
+            note(f"{self.left_side} <= {to_move} <= {new_right}")
+            self.right_side = new_right
+            self.left_side = new_left
 
     @invariant()
     def problem_solved(self):
