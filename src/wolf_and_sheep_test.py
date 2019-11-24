@@ -66,4 +66,5 @@ class WolfAndSheep(RuleBasedStateMachine):
         assert not solved
 
 
-WolfAndSheepTest = WolfAndSheep.TestCase
+# ignored. uncomment to run
+# WolfAndSheepTest = WolfAndSheep.TestCase
